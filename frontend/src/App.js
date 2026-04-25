@@ -1,24 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Home, ShoppingCart, User } from 'lucide-react'; // Dùng thử icon đã cài
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h1>🍼 Milk Store Project</h1>
+        <p>Chào mừng bạn đến với cửa hàng sữa của Tiến!</p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+          <Home size={32} color="blue" />
+          <ShoppingCart size={32} color="green" />
+          <User size={32} color="orange" />
+        </div>
+      </div>
   );
 }
 
