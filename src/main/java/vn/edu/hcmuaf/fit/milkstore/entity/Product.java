@@ -1,7 +1,10 @@
 package vn.edu.hcmuaf.fit.milkstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -16,8 +19,6 @@ public class Product {
     @Column(unique = true)
     private String slug;
 
-    private Double price;
-    private Integer stock;
     private String imageUrl;
 
     // Sản phẩm thuộc về một Danh mục
@@ -29,4 +30,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ProductVariant> variants;
 }
