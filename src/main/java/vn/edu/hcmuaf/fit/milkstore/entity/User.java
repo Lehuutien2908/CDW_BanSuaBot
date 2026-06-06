@@ -26,11 +26,18 @@ public class User {
     private String address;
     private String avatar;
 
-    private boolean enabled = true; // Tài khoản có đang hoạt động không
+    private boolean enabled = false;
+
+    // Mã xác nhận đăng ký
+    @Column(name = "verification_token")
+    private String verificationToken;
 
     // Phần dành cho Social Login
     private String provider;   // "LOCAL" hoặc "GOOGLE"
     private String providerId; // ID từ phía Google trả về
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

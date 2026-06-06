@@ -18,10 +18,10 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @PostMapping
-    public Product createProduct(@RequestBody Product product){
-        return productService.createProduct(product);
-    }
+//    @PostMapping
+//    public Product createProduct(@RequestBody Product product){
+//        return productService.createProduct(product);
+//    }
 
     @GetMapping("/hot-deals")
     public List<Product> getHotDeals() {

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FaChevronUp } from "react-icons/fa";
 import { FiSearch, FiShoppingCart, FiMenu, FiX, FiUser } from "react-icons/fi";
 
 import './header.css';
 
-const Header = () => {
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -20,8 +19,11 @@ const Header = () => {
     };
 
     const handleLogout = () => {
+        localStorage.setItem("isLoggedIn", "false");
         setIsLoggedIn(false);
         setIsDropdownOpen(false);
+
+        navigate('/home');
     };
 
     return (

@@ -1,18 +1,56 @@
-import React from 'react';
-import { Home, ShoppingCart, User } from 'lucide-react'; // Dùng thử icon đã cài
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import Home from "./pages/Home";
+import Header from "./components/header_footer/Header";
+import Footer from "./components/header_footer/Footer";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword"
+import ResetPassword from './pages/auth/ResetPassword';
+import VerifyAccount from './pages/auth/VerifyAccount';
 
 function App() {
-  return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h1>🍼 Milk Store Project</h1>
-        <p>Chào mừng bạn đến với cửa hàng sữa của Tiến!</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-          <Home size={32} color="blue" />
-          <ShoppingCart size={32} color="green" />
-          <User size={32} color="orange" />
-        </div>
-      </div>
-  );
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        const savedState = localStorage.getItem("isLoggedIn");
+        if (savedState === null) {
+            localStorage.setItem("isLoggedIn", "false");
+            return false;
+        }
+        return savedState === "true";
+    });
+
+    return (
+        <BrowserRouter>
+            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Routes>
+
+                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
+
+
+                {/*<Route path="/products" element={<Products />} />*/}
+                {/*<Route path="/products/:id" element={<ProductDetail />} />*/}
+
+                <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/verify-account" element={<VerifyAccount />} />
+
+
+                {/*<Route path="/user" element={<User />} />*/}
+                {/*<Route path="/order/:id" element={<OrderDetail />} />*/}
+                {/*<Route path="/orders" element={<Orders />} />*/}
+
+                {/*Trang thanh toán  */}
+                {/*<Route path="/payment" element={<Payment />} />*/}
+                {/*<Route path="/cart" element={<Cart />} />*/}
+
+
+            </Routes>
+            <Footer />
+        </BrowserRouter>
+    );
 }
 
 export default App;
