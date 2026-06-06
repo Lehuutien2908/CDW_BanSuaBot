@@ -1,0 +1,14 @@
+/* Kế thừa toàn bộ giao diện từ HotDeals sang và bổ sung Badge New độc quyền */
+.new-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #e53e3e;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 2;
+    text-transform: uppercase;
+}

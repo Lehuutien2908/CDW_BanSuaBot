@@ -1,0 +1,81 @@
+.footer {
+    width: 100%;
+    background-color: #2a6655;
+    padding: 40px 0;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    box-sizing: border-box; /* Đảm bảo không bị lòi khung */
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    box-sizing: border-box;
+}
+
+/* Mỗi cột tự động chia đều không gian */
+.top-footer {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Thêm class này để custom riêng cho chữ Suatot ở cột 1 không bị viết hoa toàn bộ */
+.top-footer.brand-column .title p {
+    text-transform: none;
+    font-size: 24px; /* Cho tên thương hiệu to rõ ràng */
+    font-weight: 700;
+}
+
+.top-footer .title p {
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.top-footer .contend p {
+    font-size: 14px;
+    color: #9cb7af;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.6; /* Tăng độ thoáng cho đoạn văn bản giới thiệu */
+}
+
+/* link trong footer */
+.top-footer .contend a {
+    text-decoration: none;
+    color: #9cb7af;
+    transition: color 0.2s ease;
+}
+
+/* Đổi từ màu xanh tối sang màu trắng để nhìn rõ trên nền xanh đậm */
+.top-footer .contend a:hover {
+    color: #ffffff;
+}
+
+/* =========================================================
+   CẤU HÌNH RESPONSIVE CHO MOBILE (DƯỚI 768PX)
+   ========================================================= */
+@media screen and (max-width: 768px) {
+    .footer-container {
+        flex-direction: column; /* Chuyển từ hàng ngang thành hàng dọc */
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    .top-footer {
+        width: 100%;
+    }
+
+    .top-footer .title p {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Đường gạch chân nhẹ phân chia các mục */
+    }
+}

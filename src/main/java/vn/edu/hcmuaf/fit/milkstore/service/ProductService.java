@@ -13,11 +13,16 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    public List<Product> getHotDeals() {
+        return productRepository.findTopHotDeals();
+    }
+
+    public List<Product> getNewProducts() {
+        return productRepository.findTopNewProducts();
+    }
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
-    }
 }

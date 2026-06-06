@@ -1,0 +1,82 @@
+.hero-banner {
+    width: 100%;
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #f7fafc 0%, rgba(247, 250, 252, 0.95) 30%, rgba(247, 250, 252, 0.8) 50%, rgba(247, 250, 252, 0) 100%);
+    z-index: 1;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    max-width: 580px;
+}
+
+.hero-tag {
+    background-color: #ffffff;
+    color: #2a6655;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.hero-content h1 {
+    font-size: 2.8rem;
+    color: #1a4438;
+    margin: 20px 0 15px 0;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* =========================================
+   GIAO DIỆN ĐIỆN THOẠI (DƯỚI 768PX)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    .hero-banner {
+        min-height: 65vh;
+    }
+
+    .hero-overlay {
+        background: rgba(247, 250, 252, 0.9);
+    }
+
+    .hero-container {
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+}

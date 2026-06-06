@@ -22,4 +22,14 @@ public class ProductController {
     public Product createProduct(@RequestBody Product product){
         return productService.createProduct(product);
     }
+
+    @GetMapping("/hot-deals")
+    public List<Product> getHotDeals() {
+        return productService.getHotDeals();
+    }
+
+    @GetMapping("/new-products")
+    public List<Product> getNewProducts() {
+        return productService.getNewProducts();
+    }
 }
