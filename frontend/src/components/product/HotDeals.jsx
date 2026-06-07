@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'; // Nhớ import thêm 2 hook này
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/CartSlice';
 import './hotDeals.css';
 import { FaArrowRight } from 'react-icons/fa';
 
 function HotDeals() {
     const [products, setProducts] = useState([]);
-
     const [isLoading, setIsLoading] = useState(true);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch('http://localhost:8080/api/products/hot-deals')
@@ -19,6 +21,11 @@ function HotDeals() {
                 setIsLoading(false);
             });
     }, []);
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product));
+        alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+    };
 
     return (
         <section className="product-section">
@@ -44,7 +51,7 @@ function HotDeals() {
                             <div className="product-info">
                                 <h3>{p.name}</h3>
                                 <p className="product-price">{p.price ? p.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}</p>
-                                <button className="add-to-cart-btn">Thêm vào giỏ</button>
+                                <button className="add-to-cart-btn" onClick={() => handleAddToCart(p)}>Thêm vào giỏ</button>
                             </div>
                         </div>
                     ))}

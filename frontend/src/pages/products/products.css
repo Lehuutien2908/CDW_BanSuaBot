@@ -1,0 +1,234 @@
+/* --- BỐ CỤC TỔNG THỂ TRANG --- */
+.products-page {
+    padding: 40px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.products-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* --- SIDEBAR BỘ LỌC CÓ THANH CUỘN ĐỘC LẬP --- */
+.products-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px); /* Khóa chiều cao bằng màn hình */
+    overflow-y: auto; /* Cho phép cuộn dọc độc lập */
+    padding-right: 10px;
+}
+
+/* Trang trí thanh cuộn Sidebar cho đẹp */
+.products-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+.products-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.products-sidebar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+.products-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* --- CHI TIẾT BỘ LỌC --- */
+.filter-group {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 20px;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+}
+
+.filter-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.filter-label:hover {
+    color: #0056b3;
+}
+
+.filter-label input[type="radio"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #0056b3;
+}
+
+/* --- NỘI DUNG CHÍNH (BÊN PHẢI) --- */
+.products-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.products-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.products-count {
+    color: #666;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.sort-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    background-color: white;
+}
+
+/* --- LƯỚI SẢN PHẨM --- */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 24px;
+}
+
+/* --- LOADING & EMPTY --- */
+.loading-state, .empty-state {
+    text-align: center;
+    padding: 60px 0;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* --- PHÂN TRANG --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #555;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #f1f3f5;
+    border-color: #ccc;
+}
+
+.page-btn.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- RESPONSIVE CHO MÀN HÌNH NHỎ --- */
+@media screen and (max-width: 900px) {
+    .products-page {
+        padding: 20px 16px;
+    }
+
+    .products-layout {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .products-sidebar {
+        width: 100%;
+        position: static;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-height: none; /* Bỏ khóa chiều cao trên điện thoại */
+        overflow-y: visible;
+    }
+
+    .filter-group {
+        margin-bottom: 0;
+        border-bottom: none;
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .products-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .sort-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

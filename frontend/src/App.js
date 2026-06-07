@@ -35,13 +35,14 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword/>}/>
                 <Route path="/verify-account" element={<VerifyAccount/>}/>
 
+                {/*<Route path="/cart" element={<Cart />} />*/}
+
                 <Route element={<PrivateRoute isLoggedIn={isLoggedIn}/>}>
                     {/*<Route path="/profile" element={<User />} />*/}
                     {/*<Route path="/order/:id" element={<OrderDetail />} />*/}
                     {/*<Route path="/orders" element={<Orders />} />*/}
 
                     {/*<Route path="/payment" element={<Payment />} />*/}
-                    {/*<Route path="/cart" element={<Cart />} />*/}
                 </Route>
             </Routes>
             <Footer/>
