@@ -6,10 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import vn.edu.hcmuaf.fit.milkstore.dto.ProductDetailDTO;
 import vn.edu.hcmuaf.fit.milkstore.entity.Product;
 import vn.edu.hcmuaf.fit.milkstore.repository.ProductRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,5 +75,31 @@ public class ProductService {
         } else {
             return productRepository.filterProductsNewest(name, categoryId, brandId, minPrice, maxPrice, pageable);
         }
+    }
+
+    public ProductDetailDTO getProductDetail(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+
+        ProductDetailDTO dto = new ProductDetailDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setImageUrl(product.getImageUrl());
+
+        if (product.getBrand() != null) dto.setBrandName(product.getBrand().getName());
+        if (product.getCategory() != null) dto.setCategoryName(product.getCategory().getName());
+
+        if (product.getVariants() != null) {
+            List<ProductDetailDTO.VariantDTO> variantDTOs = product.getVariants().stream().map(v -> {
+                ProductDetailDTO.VariantDTO vDto = new ProductDetailDTO.VariantDTO();
+                vDto.setId(v.getId());
+                vDto.setPrice(v.getPrice());
+                vDto.setStock(v.getStock());
+                vDto.setWeight(v.getWeight());
+                return vDto;
+            }).collect(Collectors.toList());
+            dto.setVariants(variantDTOs);
+        }
+        return dto;
     }
 }

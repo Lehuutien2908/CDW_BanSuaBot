@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/CartSlice';
-import './newProduct.css';
+import { Link } from 'react-router-dom';
+import ProductCard from './ProductCard';
 import { FaArrowRight } from 'react-icons/fa';
+import './newProduct.css';
 
 function NewProduct() {
     const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch('http://localhost:8080/api/products/new-products')
@@ -22,11 +21,6 @@ function NewProduct() {
             });
     }, []);
 
-    const handleAddToCart = (product) => {
-        dispatch(addToCart(product));
-        alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
-    };
-
     return (
         <section className="product-section new-section">
             <div className="section-header">
@@ -34,9 +28,9 @@ function NewProduct() {
                     <h2>Sản Phẩm Mới Ra Mắt</h2>
                     <p>Cập nhật những giải pháp dinh dưỡng đột phá mới nhất cho bé.</p>
                 </div>
-                <a href="/products" className="view-all-link">
+                <Link to="/products" className="view-all-link">
                     Xem tất cả <FaArrowRight />
-                </a>
+                </Link>
             </div>
 
             {isLoading ? (
@@ -44,16 +38,10 @@ function NewProduct() {
             ) : (
                 <div className="product-grid">
                     {products.map(p => (
-                        <div className="product-card" key={p.id}>
-                            <span className="new-badge">New</span>
-                            <div className="product-img-wrapper">
-                                <img src={p.image_url} alt={p.name} />
-                            </div>
-                            <div className="product-info">
-                                <h3>{p.name}</h3>
-                                <p className="product-price">{p.price ? p.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}</p>
-                                <button className="add-to-cart-btn" onClick={() => handleAddToCart(p)}>Thêm vào giỏ</button>
-                            </div>
+                        <div key={p.id} style={{ position: 'relative' }}>
+                            <span className="new-badge" style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 2 }}>New</span>
+
+                            <ProductCard product={p} />
                         </div>
                     ))}
                 </div>

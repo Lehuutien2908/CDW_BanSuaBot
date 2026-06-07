@@ -8,6 +8,9 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword"
 import ResetPassword from './pages/auth/ResetPassword';
 import VerifyAccount from './pages/auth/VerifyAccount';
+import PrivateRoute from "./routes/PrivateRoute";
+import Products from "./pages/products/Products";
+import ProductDetail from "./pages/products/ProductDetail";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -26,8 +29,8 @@ function App() {
 
                 <Route path="/" element={<Home/>}/>
                 <Route path="/home" element={<Home/>}/>
-                {/*<Route path="/products" element={<Products />} />*/}
-                {/*<Route path="/products/:id" element={<ProductDetail />} />*/}
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
 
                 <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/register" element={<Register/>}/>

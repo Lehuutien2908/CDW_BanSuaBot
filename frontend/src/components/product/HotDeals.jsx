@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/CartSlice';
-import './hotDeals.css';
+import { Link } from 'react-router-dom';
+import ProductCard from './ProductCard';
 import { FaArrowRight } from 'react-icons/fa';
+import './hotDeals.css';
 
 function HotDeals() {
     const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch('http://localhost:8080/api/products/hot-deals')
@@ -22,11 +21,6 @@ function HotDeals() {
             });
     }, []);
 
-    const handleAddToCart = (product) => {
-        dispatch(addToCart(product));
-        alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
-    };
-
     return (
         <section className="product-section">
             <div className="section-header">
@@ -34,9 +28,9 @@ function HotDeals() {
                     <h2>Sản Phẩm Bán Chạy Nhất</h2>
                     <p>Lựa chọn hàng đầu của hàng ngàn bà mẹ Việt Nam.</p>
                 </div>
-                <a href="/products" className="view-all-link">
+                <Link to="/products" className="view-all-link">
                     Xem tất cả <FaArrowRight />
-                </a>
+                </Link>
             </div>
 
             {isLoading ? (
@@ -44,16 +38,7 @@ function HotDeals() {
             ) : (
                 <div className="product-grid">
                     {products.map(p => (
-                        <div className="product-card" key={p.id}>
-                            <div className="product-img-wrapper">
-                                <img src={p.image_url} alt={p.name} />
-                            </div>
-                            <div className="product-info">
-                                <h3>{p.name}</h3>
-                                <p className="product-price">{p.price ? p.price.toLocaleString('vi-VN') + 'đ' : 'Liên hệ'}</p>
-                                <button className="add-to-cart-btn" onClick={() => handleAddToCart(p)}>Thêm vào giỏ</button>
-                            </div>
-                        </div>
+                        <ProductCard key={p.id} product={p} />
                     ))}
                 </div>
             )}

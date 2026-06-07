@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.hcmuaf.fit.milkstore.dto.ProductDetailDTO;
 import vn.edu.hcmuaf.fit.milkstore.entity.Product;
 import vn.edu.hcmuaf.fit.milkstore.service.ProductService;
 
@@ -60,5 +61,10 @@ public class ProductController {
     ) {
         Page<Product> result = productService.filterProducts(name, categoryId, brandId, price, sort, page, size);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDetailDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductDetail(id));
     }
 }
