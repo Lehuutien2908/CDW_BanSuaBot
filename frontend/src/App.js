@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React, { useState } from 'react';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import React, {useState} from 'react';
 import Home from "./pages/Home";
 import Header from "./components/header_footer/Header";
 import Footer from "./components/header_footer/Footer";
@@ -21,34 +21,30 @@ function App() {
 
     return (
         <BrowserRouter>
-            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
             <Routes>
 
-                <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-
-
+                <Route path="/" element={<Home/>}/>
+                <Route path="/home" element={<Home/>}/>
                 {/*<Route path="/products" element={<Products />} />*/}
                 {/*<Route path="/products/:id" element={<ProductDetail />} />*/}
 
-                <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/verify-account" element={<VerifyAccount />} />
+                <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
+                <Route path="/register" element={<Register/>}/>
+                <Route path="/forgot-password" element={<ForgotPassword/>}/>
+                <Route path="/reset-password" element={<ResetPassword/>}/>
+                <Route path="/verify-account" element={<VerifyAccount/>}/>
 
+                <Route element={<PrivateRoute isLoggedIn={isLoggedIn}/>}>
+                    {/*<Route path="/profile" element={<User />} />*/}
+                    {/*<Route path="/order/:id" element={<OrderDetail />} />*/}
+                    {/*<Route path="/orders" element={<Orders />} />*/}
 
-                {/*<Route path="/user" element={<User />} />*/}
-                {/*<Route path="/order/:id" element={<OrderDetail />} />*/}
-                {/*<Route path="/orders" element={<Orders />} />*/}
-
-                {/*Trang thanh toán  */}
-                {/*<Route path="/payment" element={<Payment />} />*/}
-                {/*<Route path="/cart" element={<Cart />} />*/}
-
-
+                    {/*<Route path="/payment" element={<Payment />} />*/}
+                    {/*<Route path="/cart" element={<Cart />} />*/}
+                </Route>
             </Routes>
-            <Footer />
+            <Footer/>
         </BrowserRouter>
     );
 }

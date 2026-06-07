@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {FiMail, FiLock, FiEyeOff, FiEye} from 'react-icons/fi';
 import './login.css';
 
@@ -9,6 +9,10 @@ const Login = ({ setIsLoggedIn }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Kiểm tra khách đến từ trang nào thì chuyển khách về trang đó
+    const from = location.state?.from?.pathname || '/home';
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -33,16 +37,16 @@ const Login = ({ setIsLoggedIn }) => {
 
             const data = await response.json();
 
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("userFullName", data.fullName);
-            localStorage.setItem("userRoles", JSON.stringify(data.roles));
+            sessionStorage.setItem("isLoggedIn", "true");
+            sessionStorage.setItem("userFullName", data.fullName);
+            sessionStorage.setItem("userRoles", JSON.stringify(data.roles));
 
             setIsLoggedIn(true);
 
             if (data.roles.includes("ROLE_ADMIN") || data.roles.includes("ADMIN")) {
                 navigate('/admin');
             } else {
-                navigate('/home');
+                navigate(from, { replace: true });
             }
         } catch (error) {
             setErrorMessage('Lỗi kết nối Server!');

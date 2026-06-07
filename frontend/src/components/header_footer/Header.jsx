@@ -19,7 +19,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
     };
 
     const handleLogout = () => {
-        localStorage.setItem("isLoggedIn", "false");
+        sessionStorage.clear();
         setIsLoggedIn(false);
         setIsDropdownOpen(false);
 
