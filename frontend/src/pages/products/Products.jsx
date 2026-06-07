@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {useSearchParams} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/product/ProductCard';
-import {FiFilter, FiChevronLeft, FiChevronRight} from 'react-icons/fi';
+import { FiFilter, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import './products.css';
 
 const Products = () => {
@@ -20,33 +20,39 @@ const Products = () => {
     const [totalElements, setTotalElements] = useState(0);
 
     const categories = [
-        {id: '', name: 'Tất cả'},
-        {id: 2, name: 'Sữa cho bé 0-6 tháng'},
-        {id: 5, name: 'Sữa cho bé 6-12 tháng'},
-        {id: 6, name: 'Sữa cho bé 1-3 tuổi'},
-        {id: 7, name: 'Sữa cho bé trên 3 tuổi'},
-        {id: 3, name: 'Sữa cho mẹ bầu'},
-        {id: 4, name: 'Sữa cho người lớn'}
+        { id: '', name: 'Tất cả' },
+        { id: 2, name: 'Sữa cho bé 0-6 tháng' },
+        { id: 5, name: 'Sữa cho bé 6-12 tháng' },
+        { id: 6, name: 'Sữa cho bé 1-3 tuổi' },
+        { id: 7, name: 'Sữa cho bé trên 3 tuổi' },
+        { id: 3, name: 'Sữa cho mẹ bầu' },
+        { id: 4, name: 'Sữa cho người lớn' }
     ];
 
     const brands = [
-        {id: '', name: 'Tất cả'},
-        {id: 1, name: 'Meiji'},
-        {id: 2, name: 'Colosbaby'},
-        {id: 3, name: 'Nutifood'},
-        {id: 4, name: 'Meta Care'},
-        {id: 5, name: 'Enfamil - Enfagrow'},
-        {id: 6, name: 'Aptamil'},
-        {id: 7, name: 'Abbott'}
+        { id: '', name: 'Tất cả' },
+        { id: 1, name: 'Meiji' },
+        { id: 2, name: 'Colosbaby' },
+        { id: 3, name: 'Nutifood' },
+        { id: 4, name: 'Meta Care' },
+        { id: 5, name: 'Enfamil - Enfagrow' },
+        { id: 6, name: 'Aptamil' },
+        { id: 7, name: 'Abbott' }
     ];
 
     const priceRanges = [
-        {id: 'all', name: 'Tất cả'},
-        {id: 'under_300', name: 'Dưới 300.000đ'},
-        {id: '300_600', name: '300.000đ - 600.000đ'},
-        {id: 'over_600', name: 'Trên 600.000đ'}
+        { id: 'all', name: 'Tất cả' },
+        { id: 'under_300', name: 'Dưới 300.000đ' },
+        { id: '300_600', name: '300.000đ - 600.000đ' },
+        { id: 'over_600', name: 'Trên 600.000đ' }
     ];
 
+    // Riêng searchQuery từ URL đổi thì cần effect riêng để reset trang về 1 công tâm nhất
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
+    // Hàm gọi API chuẩn chỉnh duy nhất 1 lần khi có thay đổi trạng thái
     useEffect(() => {
         setIsLoading(true);
         const params = new URLSearchParams();
@@ -85,18 +91,13 @@ const Products = () => {
 
     }, [searchQuery, activeCategory, activeBrand, activePrice, sortBy, currentPage]);
 
-    // Khi đổi bộ lọc (category, brand, price, sort), ép nó quay về trang 1
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery, activeCategory, activeBrand, activePrice, sortBy]);
-
     return (
         <div className="products-page">
             <div className="products-layout">
 
                 <aside className="products-sidebar">
                     <div className="filter-group">
-                        <h3 className="filter-title"><FiFilter/> Danh mục</h3>
+                        <h3 className="filter-title"><FiFilter /> Danh mục</h3>
                         <ul className="filter-list">
                             {categories.map((cat) => (
                                 <li key={cat.id || 'all'}>
@@ -105,7 +106,8 @@ const Products = () => {
                                             type="radio"
                                             name="category"
                                             checked={activeCategory === cat.id}
-                                            onChange={() => setActiveCategory(cat.id)}
+                                            // TỐI ƯU: Đổi bộ lọc là ép về trang 1 ngay tại chỗ
+                                            onChange={() => { setActiveCategory(cat.id); setCurrentPage(1); }}
                                         />
                                         <span>{cat.name}</span>
                                     </label>
@@ -124,7 +126,8 @@ const Products = () => {
                                             type="radio"
                                             name="brand"
                                             checked={activeBrand === brand.id}
-                                            onChange={() => setActiveBrand(brand.id)}
+                                            // TỐI ƯU: Đổi thương hiệu ép về trang 1 luôn
+                                            onChange={() => { setActiveBrand(brand.id); setCurrentPage(1); }}
                                         />
                                         <span>{brand.name}</span>
                                     </label>
@@ -133,7 +136,7 @@ const Products = () => {
                         </ul>
                     </div>
 
-                    <div className="filter-group" style={{borderBottom: 'none'}}>
+                    <div className="filter-group" style={{ borderBottom: 'none' }}>
                         <h3 className="filter-title">Khoảng giá</h3>
                         <ul className="filter-list">
                             {priceRanges.map((price) => (
@@ -143,7 +146,8 @@ const Products = () => {
                                             type="radio"
                                             name="price"
                                             checked={activePrice === price.id}
-                                            onChange={() => setActivePrice(price.id)}
+                                            // TỐI ƯU: Đổi khoảng giá ép về trang 1 luôn
+                                            onChange={() => { setActivePrice(price.id); setCurrentPage(1); }}
                                         />
                                         <span>{price.name}</span>
                                     </label>
@@ -162,7 +166,12 @@ const Products = () => {
 
                         <div className="sort-container">
                             <label>Sắp xếp:</label>
-                            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
+                            <select
+                                value={sortBy}
+                                // TỐI ƯU: Đổi kiểu sắp xếp ép về trang 1 luôn
+                                onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1); }}
+                                className="sort-select"
+                            >
                                 <option value="newest">Mới nhất</option>
                                 <option value="price_asc">Giá: Thấp đến Cao</option>
                                 <option value="price_desc">Giá: Cao xuống Thấp</option>
@@ -176,7 +185,7 @@ const Products = () => {
                         <>
                             <div className="products-grid">
                                 {products.map(p => (
-                                    <ProductCard key={p.id} product={p}/>
+                                    <ProductCard key={p.id} product={p} />
                                 ))}
                             </div>
 
@@ -187,7 +196,7 @@ const Products = () => {
                                         disabled={currentPage === 1}
                                         onClick={() => setCurrentPage(prev => prev - 1)}
                                     >
-                                        <FiChevronLeft/>
+                                        <FiChevronLeft />
                                     </button>
 
                                     {[...Array(totalPages)].map((_, i) => (
@@ -205,7 +214,7 @@ const Products = () => {
                                         disabled={currentPage === totalPages}
                                         onClick={() => setCurrentPage(prev => prev + 1)}
                                     >
-                                        <FiChevronRight/>
+                                        <FiChevronRight />
                                     </button>
                                 </div>
                             )}
