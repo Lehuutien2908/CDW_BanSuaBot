@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     // Tìm thông tin thanh toán dựa trên mã giao dịch của VNPay/MoMo
     Optional<Payment> findByTransactionId(String transactionId);
+    
+    // Tìm thông tin thanh toán theo Order ID
+    Optional<Payment> findByOrderId(Long orderId);
 }

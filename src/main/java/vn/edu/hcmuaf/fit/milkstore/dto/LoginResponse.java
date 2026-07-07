@@ -9,4 +9,5 @@ public class LoginResponse {
     private String fullName;
     private String email;
     private Set<String> roles;
+    private String token;
 }

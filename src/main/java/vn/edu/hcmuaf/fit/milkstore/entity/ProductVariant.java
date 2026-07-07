@@ -1,11 +1,19 @@
 package vn.edu.hcmuaf.fit.milkstore.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "product_variants")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,4 +26,7 @@ public class ProductVariant {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<ImageProducts> images;
 }

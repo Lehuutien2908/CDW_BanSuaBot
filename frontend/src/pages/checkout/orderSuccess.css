@@ -1,0 +1,172 @@
+/* Order Success Page */
+.order-success-page {
+    min-height: 100vh;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.success-container {
+    max-width: 600px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 32px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    background: #d4edda;
+    color: #28a745;
+    border-radius: 50%;
+    margin-bottom: 24px;
+}
+
+.success-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 12px;
+}
+
+.success-subtitle {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* Order Info Card */
+.order-info-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+.order-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.order-info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #777;
+    font-weight: 500;
+    flex: 0 0 40%;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #333;
+    font-weight: 600;
+    flex: 1;
+    text-align: right;
+}
+
+.info-value.price {
+    color: #e74c3c;
+    font-size: 18px;
+}
+
+/* Actions */
+.success-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #fff;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #f8f9fe;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .success-container {
+        padding: 32px 20px;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .success-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .success-title {
+        font-size: 24px;
+    }
+
+    .success-subtitle {
+        font-size: 14px;
+    }
+
+    .success-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .order-info-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .info-label,
+    .info-value {
+        text-align: left;
+    }
+}

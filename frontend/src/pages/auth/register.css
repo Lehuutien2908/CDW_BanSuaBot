@@ -149,3 +149,8 @@
 .login-link:hover {
     text-decoration: underline;
 }
+
+.register-submit-btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

@@ -1,0 +1,435 @@
+/* Management Pages Common Styles */
+.management-container {
+    padding: 24px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.management-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.management-header h1 svg {
+    color: #667eea;
+}
+
+/* Buttons */
+.btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #667eea;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+/* Search Bar */
+.search-bar-admin {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar-admin svg {
+    color: #999;
+}
+
+.search-bar-admin input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+}
+
+/* Table */
+.table-container {
+    background: #fff;
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+    width: 100%;
+    min-width: 1400px;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: #f8f9fa;
+}
+
+.data-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.data-table td {
+    padding: 16px;
+    font-size: 14px;
+    color: #333;
+}
+
+.empty-row {
+    text-align: center;
+    color: #999;
+    padding: 40px !important;
+}
+
+/* Product Management - filter row + placeholder khi chưa có ảnh */
+.pm-filter-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pm-filter-row select {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+}
+
+.pm-thumb-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 22px;
+    background: #f5f6f8;
+}
+
+/* Product Table Specific */
+.product-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.product-name {
+    font-weight: 500;
+    max-width: 300px;
+}
+
+.price-range {
+    color: #e74c3c;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.stock-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stock-badge.in-stock {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stock-badge.out-stock {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Order Table Specific */
+.order-code {
+    font-weight: 600;
+    color: #667eea;
+}
+
+.customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.customer-name {
+    font-weight: 500;
+}
+
+.customer-email {
+    font-size: 12px;
+    color: #777;
+}
+
+.price-cell {
+    color: #e74c3c;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Customer Table Specific */
+.user-name {
+    font-weight: 500;
+}
+
+.contact-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.contact-cell svg {
+    color: #999;
+}
+
+.address-cell {
+    max-width: 250px;
+    font-size: 13px;
+    color: #555;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.roles-cell {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.role-badge.role-admin {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.role-badge.role-user {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.center-cell {
+    text-align: center;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.status-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Toggle Buttons */
+.btn-toggle {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-toggle.btn-enable {
+    background: #d4edda;
+    color: #155724;
+}
+
+.btn-toggle.btn-enable:hover {
+    background: #28a745;
+    color: white;
+}
+
+.btn-toggle.btn-disable {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-toggle.btn-disable:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.btn-edit:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+.btn-delete {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.btn-delete:hover {
+    background: #d32f2f;
+    color: #fff;
+}
+
+.btn-view {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.btn-view:hover {
+    background: #7b1fa2;
+    color: #fff;
+}
+
+/* Table Footer */
+.table-footer {
+    background: #fff;
+    padding: 16px 20px;
+    border-top: 1px solid #e0e0e0;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Loading & Error */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 16px;
+    color: #666;
+}
+
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #fcc;
+}
+
+/* Responsive - removed redundant rule as overflow-x is now always enabled */
+
+@media (max-width: 768px) {
+    .management-container {
+        padding: 16px;
+    }
+
+    .management-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .management-header h1 {
+        font-size: 24px;
+    }
+
+    .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
+}

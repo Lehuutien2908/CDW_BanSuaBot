@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
 import {FiMail, FiLock, FiEyeOff, FiEye} from 'react-icons/fi';
 import './login.css';
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({setIsLoggedIn}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +25,8 @@ const Login = ({ setIsLoggedIn }) => {
         try {
             const response = await fetch('http://localhost:8080/api/auth/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password})
             });
 
             if (!response.ok) {
@@ -39,14 +39,16 @@ const Login = ({ setIsLoggedIn }) => {
 
             sessionStorage.setItem("isLoggedIn", "true");
             sessionStorage.setItem("userFullName", data.fullName);
+            sessionStorage.setItem("userEmail", data.email);
             sessionStorage.setItem("userRoles", JSON.stringify(data.roles));
+            sessionStorage.setItem("token", data.token);
 
             setIsLoggedIn(true);
 
             if (data.roles.includes("ROLE_ADMIN") || data.roles.includes("ADMIN")) {
                 navigate('/admin');
             } else {
-                navigate(from, { replace: true });
+                navigate(from, {replace: true});
             }
         } catch (error) {
             setErrorMessage('Lỗi kết nối Server!');
@@ -65,7 +67,7 @@ const Login = ({ setIsLoggedIn }) => {
                     <div className="input-group">
                         <label>Email của bạn</label>
                         <div className="input-wrapper">
-                            <FiMail className="input-icon" />
+                            <FiMail className="input-icon"/>
                             <input
                                 type="email"
                                 placeholder="Nhập email"
@@ -81,7 +83,7 @@ const Login = ({ setIsLoggedIn }) => {
                     <div className="input-group">
                         <label>Mật khẩu</label>
                         <div className="input-wrapper">
-                            <FiLock className="input-icon" />
+                            <FiLock className="input-icon"/>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Nhập mật khẩu"

@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import {FiMail, FiLock, FiUser, FiEye, FiEyeOff} from 'react-icons/fi';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
 import './register.css';
 
 const Register = () => {
@@ -12,6 +12,7 @@ const Register = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -28,11 +29,13 @@ const Register = () => {
             return;
         }
 
+        setIsLoading(true);
+
         try {
             const response = await fetch('http://localhost:8080/api/auth/register', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({fullName, email, password})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, email, password })
             });
 
             if (!response.ok) {
@@ -48,6 +51,8 @@ const Register = () => {
         } catch (error) {
             setSuccessMessage('');
             setErrorMessage('Không thể kết nối đến máy chủ! Bạn đã bật dự án Spring Boot chưa?');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,7 +69,7 @@ const Register = () => {
                     <div className="input-group">
                         <label>Họ và Tên</label>
                         <div className="input-wrapper">
-                            <FiUser className="input-icon"/>
+                            <FiUser className="input-icon" />
                             <input
                                 type="text"
                                 placeholder="Nhập họ và tên"
@@ -80,7 +85,7 @@ const Register = () => {
                     <div className="input-group">
                         <label>Email của bạn</label>
                         <div className="input-wrapper">
-                            <FiMail className="input-icon"/>
+                            <FiMail className="input-icon" />
                             <input
                                 type="email"
                                 placeholder="Nhập email đăng ký"
@@ -96,7 +101,7 @@ const Register = () => {
                     <div className="input-group">
                         <label>Mật khẩu</label>
                         <div className="input-wrapper">
-                            <FiLock className="input-icon"/>
+                            <FiLock className="input-icon" />
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Tạo mật khẩu (Ít nhất 6 ký tự)"
@@ -111,7 +116,7 @@ const Register = () => {
                                 className="toggle-password-btn"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? <FiEyeOff/> : <FiEye/>}
+                                {showPassword ? <FiEyeOff /> : <FiEye />}
                             </button>
                         </div>
                     </div>
@@ -119,7 +124,7 @@ const Register = () => {
                     <div className="input-group">
                         <label>Xác nhận mật khẩu</label>
                         <div className="input-wrapper">
-                            <FiLock className="input-icon"/>
+                            <FiLock className="input-icon" />
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
                                 placeholder="Nhập lại mật khẩu"
@@ -134,13 +139,17 @@ const Register = () => {
                                 className="toggle-password-btn"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
-                                {showConfirmPassword ? <FiEyeOff/> : <FiEye/>}
+                                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                             </button>
                         </div>
                     </div>
 
-                    <button type="submit" className="register-submit-btn">
-                        Đăng Ký
+                    <button
+                        type="submit"
+                        className={`register-submit-btn ${isLoading ? 'loading' : ''}`}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Đang xử lý...' : 'Đăng Ký'}
                     </button>
                 </form>
 

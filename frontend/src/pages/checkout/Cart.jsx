@@ -1,150 +1,258 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { removeFromCart, updateQuantity } from '../../redux/CartSlice'; // Sửa lại đường dẫn cho đúng nhé
-import { FiTrash2, FiMinus, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {FiMinus, FiPlus, FiTrash2, FiShoppingCart} from 'react-icons/fi';
+import * as cartService from '../../services/cartService';
 import './cart.css';
 
 const Cart = () => {
-    const cartItems = useSelector((state) => state.cart.items || state.cart);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [cart, setCart] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Tính tổng tiền
-    const totalPrice = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const isLoggedIn = !!sessionStorage.getItem('token');
 
-    const handleQuantityChange = (id, currentQuantity, change) => {
-        const newQuantity = currentQuantity + change;
-        if (newQuantity < 1) return; // Không cho giảm dưới 1
-
-        // Bạn có thể thêm logic kiểm tra stock (tồn kho) ở đây nếu muốn
-        dispatch(updateQuantity({ id, quantity: newQuantity }));
-    };
-
-    const handleRemove = (id, name) => {
-        if (window.confirm(`Bạn có chắc muốn xóa "${name}" khỏi giỏ hàng?`)) {
-            dispatch(removeFromCart(id));
-        }
-    };
-
-    const handleCheckout = () => {
-        const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-
+    useEffect(() => {
         if (!isLoggedIn) {
-            alert("Bạn vui lòng đăng nhập để tiến hành thanh toán nhé!");
+            navigate('/login', {state: {from: '/cart'}});
+            return;
+        }
+        fetchCart();
+    }, [isLoggedIn, navigate]);
 
-            navigate('/login', { state: { from: '/checkout' } });
-        } else {
-            navigate('/checkout');
+    const fetchCart = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await cartService.getCart();
+            setCart(data);
+        } catch (err) {
+            console.error('Lỗi khi tải giỏ hàng:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (cartItems.length === 0) {
+    const handleIncrease = async (item) => {
+        if (item.quantity >= item.stock) {
+            alert('Đã đạt số lượng tối đa trong kho!');
+            return;
+        }
+        try {
+            const data = await cartService.updateCartItem(item.id, item.quantity + 1);
+            setCart(data);
+            window.dispatchEvent(new Event('cartUpdated'));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleDecrease = async (item) => {
+        if (item.quantity <= 1) {
+            if (window.confirm('Số lượng = 1. Bạn muốn xóa sản phẩm này?')) {
+                handleRemove(item.id);
+            }
+            return;
+        }
+        try {
+            const data = await cartService.updateCartItem(item.id, item.quantity - 1);
+            setCart(data);
+            window.dispatchEvent(new Event('cartUpdated'));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleQuantityChange = async (item, newQuantity) => {
+        const qty = parseInt(newQuantity);
+        if (isNaN(qty) || qty < 0) return;
+
+        if (qty === 0) {
+            if (window.confirm('Bạn muốn xóa sản phẩm này?')) {
+                handleRemove(item.id);
+            }
+            return;
+        }
+
+        if (qty > item.stock) {
+            alert(`Kho chỉ còn ${item.stock} sản phẩm!`);
+            return;
+        }
+
+        try {
+            const data = await cartService.updateCartItem(item.id, qty);
+            setCart(data);
+            window.dispatchEvent(new Event('cartUpdated'));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleRemove = async (itemId) => {
+        try {
+            const data = await cartService.removeCartItem(itemId);
+            setCart(data);
+            window.dispatchEvent(new Event('cartUpdated'));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    const handleClearCart = async () => {
+        if (!window.confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) return;
+        try {
+            await cartService.clearCart();
+            setCart({items: [], totalQuantity: 0, totalPrice: 0});
+            window.dispatchEvent(new Event('cartUpdated'));
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+    if (loading) {
         return (
-            <div className="cart-page empty-cart">
-                <h2>Giỏ hàng của bạn đang trống</h2>
-                <p>Hãy tìm thêm những sản phẩm dinh dưỡng cho bé nhé!</p>
-                <Link to="/products" className="continue-shopping-btn">
-                    Tiếp tục mua sắm
-                </Link>
+            <div className="cart-container">
+                <div className="cart-loading">Đang tải giỏ hàng...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="cart-container">
+                <div className="cart-error">
+                    <p>{error}</p>
+                    <button onClick={fetchCart} className="retry-btn">Thử lại</button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!cart || cart.items.length === 0) {
+        return (
+            <div className="cart-container">
+                <div className="empty-cart">
+                    <FiShoppingCart size={80} className="empty-cart-icon"/>
+                    <h2>Giỏ hàng trống</h2>
+                    <p>Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+                    <button onClick={() => navigate('/products')} className="continue-shopping-btn">
+                        Tiếp tục mua sắm
+                    </button>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="cart-page">
-            <h1 className="cart-title">Giỏ Hàng Của Bạn</h1>
+        <div className="cart-container">
+            <div className="cart-header">
+                <h1>Giỏ hàng của bạn</h1>
+                <span className="cart-item-count">({cart.totalQuantity} sản phẩm)</span>
+            </div>
 
-            <div className="cart-container">
-                <div className="cart-left">
-                    <div className="cart-header-row">
+            <div className="cart-content">
+                <div className="cart-items-section">
+                    <div className="cart-items-header">
                         <div className="col-product">Sản phẩm</div>
                         <div className="col-price">Đơn giá</div>
                         <div className="col-quantity">Số lượng</div>
                         <div className="col-total">Thành tiền</div>
-                        <div className="col-action"></div>
+                        <div className="col-actions"></div>
                     </div>
 
-                    <div className="cart-items-list">
-                        {cartItems.map((item) => (
-                            <div className="cart-item" key={item.id}>
-                                <div className="col-product">
-                                    <Link to={`/products/${item.productId}`}>
-                                        <img src={item.image_url} alt={item.name} className="cart-item-img" />
-                                    </Link>
-                                    <div className="cart-item-info">
-                                        <Link to={`/products/${item.productId}`} className="cart-item-name">
-                                            {item.name}
-                                        </Link>
-                                        <span className="cart-item-variant">Trọng lượng: {item.weight}g</span>
-                                    </div>
-                                </div>
-
-                                <div className="col-price">
-                                    {item.price.toLocaleString('vi-VN')}đ
-                                </div>
-
-                                <div className="col-quantity">
-                                    <div className="qty-controls">
-                                        <button onClick={() => handleQuantityChange(item.id, item.quantity, -1)}>
-                                            <FiMinus />
-                                        </button>
-                                        <input type="text" value={item.quantity} readOnly />
-                                        <button onClick={() => handleQuantityChange(item.id, item.quantity, 1)}>
-                                            <FiPlus />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="col-total font-bold">
-                                    {(item.price * item.quantity).toLocaleString('vi-VN')}đ
-                                </div>
-
-                                <div className="col-action">
-                                    <button
-                                        className="remove-btn"
-                                        onClick={() => handleRemove(item.id, item.name)}
-                                        title="Xóa sản phẩm"
-                                    >
-                                        <FiTrash2 />
-                                    </button>
+                    {cart.items.map((item) => (
+                        <div key={item.id} className="cart-item">
+                            <div className="col-product">
+                                <img src={item.image} alt={item.productName} className="item-image"/>
+                                <div className="item-info">
+                                    <h3>{item.productName}</h3>
+                                    <p className="item-size">Kích thước: {item.size}</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
 
-                    <button className="back-btn mt-4" onClick={() => navigate('/products')}>
-                        <FiArrowLeft /> Tiếp tục mua sắm
-                    </button>
-                </div>
+                            <div className="col-price">
+                                {item.price.toLocaleString('vi-VN')}₫
+                            </div>
 
-                {/* CỘT PHẢI: TỔNG KẾT ĐƠN HÀNG */}
-                <div className="cart-right">
-                    <div className="summary-card">
-                        <h3>Tổng Nhập Đơn Hàng</h3>
+                            <div className="col-quantity">
+                                <div className="quantity-controls">
+                                    <button
+                                        className="qty-btn"
+                                        onClick={() => handleDecrease(item)}
+                                        disabled={item.quantity <= 1}
+                                    >
+                                        <FiMinus/>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value={item.quantity}
+                                        onChange={(e) => handleQuantityChange(item, e.target.value)}
+                                        className="qty-input"
+                                        min="1"
+                                        max={item.stock}
+                                    />
+                                    <button
+                                        className="qty-btn"
+                                        onClick={() => handleIncrease(item)}
+                                        disabled={item.quantity >= item.stock}
+                                    >
+                                        <FiPlus/>
+                                    </button>
+                                </div>
+                                <p className="stock-info">Còn {item.stock} sản phẩm</p>
+                            </div>
 
-                        <div className="summary-row">
-                            <span>Tạm tính ({cartItems.length} sản phẩm):</span>
-                            <span>{totalPrice.toLocaleString('vi-VN')}đ</span>
+                            <div className="col-total">
+                                <strong>{item.subtotal.toLocaleString('vi-VN')}₫</strong>
+                            </div>
+
+                            <div className="col-actions">
+                                <button
+                                    className="remove-btn"
+                                    onClick={() => handleRemove(item.id)}
+                                    title="Xóa sản phẩm"
+                                >
+                                    <FiTrash2/>
+                                </button>
+                            </div>
                         </div>
+                    ))}
 
-                        <div className="summary-row">
-                            <span>Phí vận chuyển:</span>
-                            <span>0đ</span>
-                        </div>
-
-                        <div className="summary-divider"></div>
-
-                        <div className="summary-row total-row">
-                            <span>Tổng cộng:</span>
-                            <span className="final-price">{totalPrice.toLocaleString('vi-VN')}đ</span>
-                        </div>
-                        <p className="vat-note">(Đã bao gồm VAT nếu có)</p>
-
-                        <button className="checkout-btn" onClick={handleCheckout}>
-                            Tiến Hành Thanh Toán
+                    <div className="cart-actions-bottom">
+                        <button onClick={() => navigate('/products')} className="continue-btn">
+                            ← Tiếp tục mua sắm
+                        </button>
+                        <button onClick={handleClearCart} className="clear-cart-btn">
+                            <FiTrash2/> Xóa giỏ hàng
                         </button>
                     </div>
+                </div>
+
+                <div className="cart-summary">
+                    <h2>Thông tin đơn hàng</h2>
+
+                    <div className="summary-row">
+                        <span>Tạm tính:</span>
+                        <span>{cart.totalPrice.toLocaleString('vi-VN')}₫</span>
+                    </div>
+
+                    <div className="summary-row">
+                        <span>Phí vận chuyển:</span>
+                        <span className="free-shipping">Miễn phí</span>
+                    </div>
+
+                    <div className="summary-divider"></div>
+
+                    <div className="summary-row total-row">
+                        <span>Tổng cộng:</span>
+                        <span className="total-price">{cart.totalPrice.toLocaleString('vi-VN')}₫</span>
+                    </div>
+
+                    <button className="checkout-btn" onClick={() => navigate('/checkout')}>
+                        Thanh toán
+                    </button>
+
                 </div>
             </div>
         </div>

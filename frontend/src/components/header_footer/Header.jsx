@@ -1,14 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Link, NavLink, useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux';
 import {FaChevronUp} from "react-icons/fa";
 import {FiSearch, FiShoppingCart, FiMenu, FiX, FiUser} from "react-icons/fi";
-
+import { getCart } from '../../services/cartService';
 import './header.css';
 
 const Header = ({isLoggedIn, setIsLoggedIn}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
+    const [userAvatar, setUserAvatar] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -18,9 +20,87 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
 
     const navigate = useNavigate();
 
-    // Hút dữ liệu Giỏ hàng từ Redux
-    const cartItems = useSelector((state) => state.cart.items);
-    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    // Fetch cart count khi component mount và khi có sự kiện cartUpdated
+    useEffect(() => {
+        fetchCartCount();
+        fetchUserProfile();
+        checkAdminRole();
+    }, [isLoggedIn]);
+
+    const checkAdminRole = () => {
+        const rolesStr = sessionStorage.getItem('userRoles');
+        if (rolesStr) {
+            try {
+                const roles = JSON.parse(rolesStr);
+                setIsAdmin(roles.includes('ROLE_ADMIN') || roles.includes('ADMIN'));
+            } catch (e) {
+                setIsAdmin(false);
+            }
+        } else {
+            setIsAdmin(false);
+        }
+    };
+
+    useEffect(() => {
+        // Lắng nghe sự kiện cartUpdated từ các component khác
+        const handleCartUpdate = () => {
+            fetchCartCount();
+        };
+
+        window.addEventListener('cartUpdated', handleCartUpdate);
+        return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+    }, []); // Empty dependency để listener không bị remove/add lại
+
+    useEffect(() => {
+        // Lắng nghe sự kiện profileUpdated khi avatar thay đổi
+        const handleProfileUpdate = () => {
+            fetchUserProfile();
+        };
+
+        window.addEventListener('profileUpdated', handleProfileUpdate);
+        return () => window.removeEventListener('profileUpdated', handleProfileUpdate);
+    }, []);
+
+    const fetchUserProfile = async () => {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            setUserAvatar(null);
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/users/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Profile data:', data); // Debug log
+                console.log('Avatar path:', data.avatar); // Debug log
+                setUserAvatar(data.avatar);
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy thông tin profile:', error);
+        }
+    };
+
+    const fetchCartCount = async () => {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            setCartCount(0);
+            return;
+        }
+
+        try {
+            const data = await getCart();
+            setCartCount(data.totalQuantity || 0);
+        } catch (error) {
+            console.error('Lỗi khi lấy số lượng giỏ hàng:', error);
+            setCartCount(0);
+        }
+    };
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -29,6 +109,9 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
         sessionStorage.clear();
         setIsLoggedIn(false);
         setIsDropdownOpen(false);
+        setCartCount(0);
+        setUserAvatar(null);
+        setIsAdmin(false);
         navigate('/home');
     };
 
@@ -66,7 +149,7 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
             } finally {
                 setIsSearching(false);
             }
-        }, 500);
+        }, 300);
 
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm]);
@@ -170,7 +253,15 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
                 {isLoggedIn ? (
                     <div className="user-menu-container">
                         <div className="user-avatar" onClick={toggleDropdown}>
-                            <FiUser size={22}/>
+                            {userAvatar ? (
+                                <img 
+                                    src={`http://localhost:8080${userAvatar}`} 
+                                    alt="User Avatar"
+                                    className="avatar-img"
+                                />
+                            ) : (
+                                <FiUser size={22}/>
+                            )}
                         </div>
 
                         {isDropdownOpen && (
@@ -178,9 +269,15 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
                                 <Link to="/profile" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
                                     Thông tin cá nhân
                                 </Link>
-                                <Link to="/orders" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
-                                    Lịch sử mua hàng
-                                </Link>
+                                {isAdmin ? (
+                                    <Link to="/admin" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
+                                        Trang quản trị
+                                    </Link>
+                                ) : (
+                                    <Link to="/orders" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
+                                        Lịch sử đơn hàng
+                                    </Link>
+                                )}
 
                                 <div className="dropdown-divider"></div>
 
@@ -197,7 +294,7 @@ const Header = ({isLoggedIn, setIsLoggedIn}) => {
                 <Link to="/cart" className="cart-btn" style={{textDecoration: 'none'}}>
                     <FiShoppingCart size={22}/>
                     <span>Giỏ hàng</span>
-                    <span className="cart-badge">{cartCount}</span>
+                    {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
                 </Link>
             </div>
         </header>
